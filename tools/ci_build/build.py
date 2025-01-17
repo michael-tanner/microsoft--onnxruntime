@@ -451,9 +451,7 @@ def parse_arguments():
     parser.add_argument(
         "--apple_deploy_target",
         type=str,
-        help="Specify the minimum version of the target platform "
-        "(e.g. macOS or iOS)"
-        "This is only supported on MacOS",
+        help="Specify the minimum version of the target platform (e.g. macOS or iOS)This is only supported on MacOS",
     )
     # A 32-bit progress doesn't have enough memory to run all the tests in onnxruntime_test_all.
     # Mimalloc is incompatible with address sanitizer.
@@ -1248,8 +1246,7 @@ def generate_build_tree(
             cmake_args += ["-Donnxruntime_MPI_HOME=" + mpi_home]
         else:
             log.warning(
-                "mpi_home is supplied but use_mpi is set to false."
-                " Build will continue without linking MPI libraries."
+                "mpi_home is supplied but use_mpi is set to false. Build will continue without linking MPI libraries."
             )
 
     if nccl_home and os.path.exists(nccl_home):
@@ -1594,7 +1591,7 @@ def generate_build_tree(
                 if args.parallel == 0:
                     cflags += ["/MP"]
                 else:
-                    cflags += ["/MP%d" % njobs]
+                    cflags += [f"/MP{njobs}"]
         # Setup default values for cflags/cxxflags/ldflags.
         # The values set here are purely for security and compliance purposes. ONNX Runtime should work fine without these flags.
         if (
@@ -2320,6 +2317,8 @@ def build_python_wheel(
             args.append("--use_rocm")
             if rocm_version:
                 args.append(f"--rocm_version={rocm_version}")
+            if use_migraphx:
+                args.append("--use_migraphx")
         elif use_migraphx:
             args.append("--use_migraphx")
         elif use_openvino:
